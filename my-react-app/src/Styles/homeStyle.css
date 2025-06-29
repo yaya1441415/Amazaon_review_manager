@@ -1,0 +1,99 @@
+/* Reset some basics */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('./background.jpg') ;
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents tiling */
+    background-attachment: fixed;
+    color: #333;
+  }
+  
+  /* Main container */
+  .home {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: #e5d41f;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Header text */
+  .header1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  
+  /* Form layout */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* Input styling */
+  .urlInput {
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .urlInput:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Button styling */
+  .analyze-Button {
+    padding: 12px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .analyze-Button:hover {
+    background-color: #0056b3;
+  }
+  
+  .result-box {
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    background-color: #ffff00;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: left;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .result-box h2 {
+    margin-bottom: 15px;
+  }
+
+  .result-box ul {
+    padding-left: 20px;
+  }
+  
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
