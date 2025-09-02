@@ -26,50 +26,38 @@ tokenizer = AutoTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
 def get_data(soup):
     all_reviews = []
 
-    # Extract main container (assuming soup is already parsed HTML)
-    div = soup.find('div', class_='a-row cm_cr_grid_center_container')
+    review_items = soup.find_all("li", {"data-hook": "review"})
+    print(review_items)
 
-    # Extract Customer Names
-    names = div.find_all('span', class_='a-profile-name')
+    for item in review_items:
+        # Customer name
+        name_tag = item.find("span", class_="a-profile-name")
+        customer_name = name_tag.get_text(strip=True) if name_tag else ""
 
-    customer_names = [name.get_text(strip=True) for name in names]
+        # Star rating
+        star_tag = item.find("i", {"data-hook": "review-star-rating"})
+        stars = star_tag.get_text(strip=True) if star_tag else ""
 
-    # Extract Star Ratings
-    stars = div.find_all('span', class_='a-icon-alt')
-    ratings = [star.get_text(strip=True) for star in stars]
+        # Review title
+        title_tag = item.find("a", {"data-hook": "review-title"})
+        title = ""
+        if title_tag:
+            # title can be inside a <span>
+            span = title_tag.find("span")
+            title = span.get_text(strip=True) if span else title_tag.get_text(strip=True)
 
-    # Extract Review Titles (titles in the 'a' tag without a class)
-    all_spans = div.find_all("a", class_="a-size-base a-link-normal review-title a-color-base review-title-content a-text-bold")
-    titles = []
+        # Review body
+        body_tag = item.find("span", {"data-hook": "review-body"})
+        description = body_tag.get_text(strip=True) if body_tag else ""
 
-
-    #Loops through each review block in all_spans
-    for review in all_spans:
-        #within each review block find the <span> element
-        spans = review.find_all("span")
-        #filters out spans that have a lass 
-        for span in spans:
-            if not span.has_attr("class"):
-                titles.append(span.text.strip())
-
-    #finds all elements that contain the review body using a very specific set of class
-    divs = soup.find_all('div', class_='a-expander-content reviewText review-text-content a-expander-partial-collapse-content')
-    descriptions = []
-    #finds all span elements inside those divs.
-    for div in divs:
-        #then finds all span elements inside those divs.
-        for span in div.find_all("span"):
-            descriptions.append(span.get_text(strip=True))
-
-
-    for i in range(len(titles)):
         review_data = {
-            'title': titles[i] if i < len(titles) else '',
-            'stars': ratings[i] if i < len(ratings) else '',
-            'customer_name': customer_names[i] if i < len(customer_names) else '',
-            'description': descriptions[i] if i < len(descriptions) else ''
+            "title": title,
+            "stars": stars,
+            "customer_name": customer_name,
+            "description": description
         }
         all_reviews.append(review_data)
+
 
     return all_reviews
 
@@ -142,6 +130,8 @@ def Sentiment(soup):
 # pretrained NLP model, and return a concise final summary.
 def summarise(soup):
     reviews = get_data(soup)
+
+    print(reviews)
     
     #concatenate all the reviews texs into One big String
     all_review = " ".join([review["description"] for review in reviews])
@@ -174,7 +164,7 @@ def summarise(soup):
     #Runs the HuggingFace summarization pipeline on each chunk
     for text in chunks:
         #returns a list of dictionaris each containing a summary of the input text.
-        output = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        output = summarizer(text, max_length=min(30, len(text.split())), min_length=5, do_sample=False)
         summaries.append(output[0]["summary_text"])
 
     if len(summaries) == 1:
