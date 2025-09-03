@@ -27,7 +27,10 @@ def get_data(soup):
     all_reviews = []
 
     review_items = soup.find_all("li", {"data-hook": "review"})
-    print(review_items)
+    
+
+    # Extract text and strip whitespace
+    
 
     for item in review_items:
         # Customer name
@@ -131,6 +134,7 @@ def Sentiment(soup):
 def summarise(soup):
     reviews = get_data(soup)
 
+    
     print(reviews)
     
     #concatenate all the reviews texs into One big String
@@ -146,11 +150,11 @@ def summarise(soup):
 
     #break text into safe chunks
     for sentence in sentences :
-        tentative_chunk = sentence+". "
+        tentative_chunk = (current_chunk + " " +sentence).strip() +". "
         tokenized = tokenizer.encode(tentative_chunk, add_special_tokens=False)
 
-        if len(tokenized)<max_chunck_length:
-            current_chunk += tentative_chunk
+        if len(tokenized) <= max_chunck_length:
+            current_chunk = tentative_chunk
         else:
             if current_chunk:
                 chunks.append(current_chunk.strip())
@@ -164,7 +168,7 @@ def summarise(soup):
     #Runs the HuggingFace summarization pipeline on each chunk
     for text in chunks:
         #returns a list of dictionaris each containing a summary of the input text.
-        output = summarizer(text, max_length=min(30, len(text.split())), min_length=5, do_sample=False)
+        output = summarizer(text, max_length=100, min_length=30, do_sample=False)
         summaries.append(output[0]["summary_text"])
 
     if len(summaries) == 1:

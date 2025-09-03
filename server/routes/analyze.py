@@ -14,15 +14,10 @@ analyze_bp = Blueprint('analyze', __name__)  #Blueprint for analyze routes
 
 @analyze_bp.route("/analyze", methods=['POST'])
 def analyze():
+
     #get the data sent from the front-end
     data = request.get_json()
-    #access the url key
-    url = data.get('url')
-
-    #header 
-    header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
-              'Accept-Language': 'en-US, en;q=0.5',}
-    
+    url = data.get('url') #access the url key
 
     if not url:
         return jsonify({'error':'No URL provided'}), 400
@@ -30,6 +25,7 @@ def analyze():
     if not validators.url(url):
         return jsonify({'error':'Invalid URL'}), 400
     
+
     options = uc.ChromeOptions()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-blink-features=AutomationControlled")
@@ -56,31 +52,17 @@ def analyze():
         driver.get(url)
 
         time.sleep(5)
-
+        
         html = driver.page_source
-
-
 
         soup= BeautifulSoup(html, 'html.parser')
         soup1 = BeautifulSoup(soup.prettify(), "html.parser")
-        print(soup1)
+        
     
         average_stars = get_stars(soup1)
-    
-        top_words = get_top_word(soup1)
-
-
-    
-        sentiment = Sentiment(soup1)
-    
+        top_words = get_top_word(soup1)       
+        sentiment = Sentiment(soup1)    
         summary = summarise(soup1)
-
-    
-    
-     
-    
-
-
 
     finally:
         driver.quit()

@@ -1,6 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from routes.analyze import analyze_bp
+import os
 
 # Point Flask to React build folder
 app = Flask(__name__, static_folder="dist", static_url_path="")
@@ -21,5 +22,10 @@ def serve_index():
 def not_found(e):
     return send_from_directory(app.static_folder, "index.html")
 
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environget("PORT", 5000)) #Render provide $PORT
+    app.run(host="0.0.0.0", port=port)
+
