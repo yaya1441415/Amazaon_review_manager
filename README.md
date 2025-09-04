@@ -33,7 +33,7 @@ I used NLTK to extract meaningfull patterns from raw review text.
 
 I used HuggingFace Transformers for  high-quality abstractive summarization of all reviews.
 
-I used BeautifulSoup to extract structured data from raw HTML pages of Amazon.
+BeautifulSoup & Selenium – Scrapes structured data from Amazon pages reliably, with stealth options for headless Chrome.
 
 
 
@@ -54,7 +54,15 @@ monolithic architecture where both the frontend and backend are combined into a 
 
 in terminal:
 
-cd server
-python server.py
+- **navigate to server:** cd server
 
+- **Install pytho dependencies:** pip install -r requirements.txt
+
+- **Run the Backend:** python server.py
+
+## 🎯 Why This Project Stands Out
+
+-  **Combines real-world web scraping with modern NLP techniques**.
+-  **Demonstrates full-stack development skills: React frontend + Flask backend**.
+- **Shows ability to handle headless browser automation, data extraction, and intelligent summarization**.
 
