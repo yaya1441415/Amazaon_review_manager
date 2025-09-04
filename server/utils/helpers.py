@@ -135,7 +135,7 @@ def summarise(soup):
     reviews = get_data(soup)
 
     
-    print(reviews)
+    
     
     #concatenate all the reviews texs into One big String
     all_review = " ".join([review["description"] for review in reviews])

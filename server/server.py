@@ -4,7 +4,7 @@ from routes.analyze import analyze_bp
 import os
 
 # Point Flask to React build folder
-app = Flask(__name__, static_folder="dist", static_url_path="")
+app = Flask(__name__)
 
 # Allow CORS if needed (can restrict origins for production)
 CORS(app)
@@ -14,18 +14,15 @@ app.register_blueprint(analyze_bp)
 
 # Serve React App
 @app.route("/")
-def serve_index():
-    return send_from_directory(app.static_folder, "index.html")
+def home():
+    return {"message": "Amazon Review Analyzer API running!"}
 
-# Optional: Handle React Router routes
-@app.errorhandler(404)
-def not_found(e):
-    return send_from_directory(app.static_folder, "index.html")
+
 
 # if __name__ == "__main__":
 #     app.run(debug=True)
 
 if __name__ == "__main__":
-    port = int(os.environget("PORT", 5000)) #Render provide $PORT
+    port = int(os.environ.get("PORT", 5000)) #Render provide $PORT
     app.run(host="0.0.0.0", port=port)
 
